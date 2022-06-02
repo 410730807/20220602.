@@ -1,0 +1,80 @@
+var inputElement,sliderElement,btnElement,colorPicker,radioElement
+var randomValue=0//預設值為0,(文字靜止)第一次按下按鈕，值就會變成10(文字抖動)，第二次按，又回到0(文字靜止)
+
+
+function setup() {
+	createCanvas(windowWidth, windowHeight);
+	background(100);
+	inputElement=createInput("Hello")
+	inputElement.position(50,50)
+	inputElement.style("font-size",'20px')
+	inputElement.style("color",'green')
+	
+	sliderElement= createSlider(30,100,50,1)//最小值，最大值，預設值，間距
+	sliderElement.position(300,50)
+  btnElement =createButton("瘋狂")
+	btnElement.position(450,50)
+	btnElement.mousePressed(goCrazy)
+	btnElement.style("border-color",'green')
+	btnElement.style("border-width",'10px')
+	btnElement.style("font-size",'20px')
+	
+	colorPicker = createColorPicker('#ed225d');//括號內的值，為預設值
+	colorPicker.position(550,50)
+	
+radioElement=createRadio()
+radioElement.option("一般")
+radioElement.option("旋轉(rotate)")
+radioElement.option("大小(scale)")
+radioElement.position(650,50)
+radioElement.style("background-color",'white')
+
+}
+function goCrazy() {
+ if(randomValue>0){
+	 randomValue=0//條件成立，執行此行
+ }
+	else
+	{
+		randomValue=10//條件不成立，執行此行
+	}
+}
+
+function draw() {
+background(0);
+var txts = inputElement.value();
+	if(txts=="pizza"){
+		txts="🍕"
+	}
+	fill(255)
+	//textSize(90)
+	var mode = radioElement.value()
+	
+	textSize(sliderElement.value())
+	textStyle(BOLD)//設定文字為粗體
+	var textLength=textWidth(txts)+80
+	var textHeight=sliderElement.value()+30
+	for(var y=0;y<height;y=y+textHeight){
+		push()
+	if(int(y/textHeight)%2==0){
+	fill(colorPicker.value())	//偶數行
+		translate(-50,0)
+	}
+		else
+	{
+		fill(255)//奇數行
+	}
+		for(var x=0;x<width;x=x+textLength){
+			push()
+			translate(x+random(-randomValue,randomValue),y+random(-randomValue,randomValue))
+			if(mode=="旋轉(rotate)"){
+				rotate(sin(frameCount/80+x/10))
+			}else  if (mode=="大小(scale)"){
+				scale(sin(frameCount/80+y/10))
+			}
+	text(txts,0,0) 
+			pop()
+	}
+	pop()
+ }
+}
